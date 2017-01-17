@@ -7,5 +7,7 @@ dependencies:
     - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/topcoder_conncet:$CIRCLE_SHA1 .
 
 test:
+  override:
+    - npm test
   post:
     - docker run -d --name topcoder_connect $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/topcoder_conncet:$CIRCLE_SHA1; sleep 10
