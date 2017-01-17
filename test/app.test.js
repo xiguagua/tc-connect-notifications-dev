@@ -6,6 +6,8 @@
  * Tests for app.js
  */
 
+/* eslint strict:0*/
+'use strict';
 
 process.env.NODE_ENV = 'test';
 
@@ -51,7 +53,7 @@ describe('app', () => {
   let targetQueue;
   let stub;
   let correlationId = 1;
-  let notificationCallback = () => { };
+  let notificationCallback = () => {};
 
   const restoreStub = () => {
     if (request.get.restore) {
@@ -62,21 +64,29 @@ describe('app', () => {
   const connectToSource = (callback) => {
     sourceExchange = jackrabbit(config.SOURCE_RABBIT_URL)
       .topic(config.SOURCE_RABBIT_EXCHANGE_NAME);
-    sourceQueue = sourceExchange.queue(
-      { name: config.SOURCE_RABBIT_QUEUE_NAME },
-      { keys: _.values(constants.events) });
+    sourceQueue = sourceExchange.queue({
+      name: config.SOURCE_RABBIT_QUEUE_NAME
+    }, {
+      keys: _.values(constants.events)
+    });
     sourceQueue.on('ready', () => {
-      sourceQueue.purge(() => { callback(); });
+      sourceQueue.purge(() => {
+        callback();
+      });
     });
   };
   const connectToTarget = (callback) => {
     targetExchange = jackrabbit(config.TARGET_RABBIT_URL)
       .topic(config.TARGET_RABBIT_EXCHANGE_NAME);
-    targetQueue = targetExchange.queue(
-      { name: config.TARGET_RABBIT_QUEUE_NAME },
-      { key: config.TARGET_RABBIT_ROUTING_KEY });
+    targetQueue = targetExchange.queue({
+      name: config.TARGET_RABBIT_QUEUE_NAME
+    }, {
+      key: config.TARGET_RABBIT_ROUTING_KEY
+    });
     targetQueue.on('ready', () => {
-      targetQueue.purge(() => { callback(); });
+      targetQueue.purge(() => {
+        callback();
+      });
     });
     targetQueue.consume((data, ack, nack, message) => {
       ack();
@@ -109,13 +119,21 @@ describe('app', () => {
     // Stub the calls to API server
     stub = sinon.stub(request, 'get');
     stub.withArgs(`${config.API_BASE_URL}/projects/1`)
-      .yields(null, { statusCode: 200 }, sampleProjects.project1);
+      .yields(null, {
+        statusCode: 200
+      }, sampleProjects.project1);
     stub.withArgs(`${config.API_BASE_URL}/projects/1000`)
-      .yields(null, { statusCode: 404 });
+      .yields(null, {
+        statusCode: 404
+      });
     stub.withArgs(`${config.API_BASE_URL}/users/1`)
-      .yields(null, { statusCode: 200 }, sampleUsers.user1);
+      .yields(null, {
+        statusCode: 200
+      }, sampleUsers.user1);
     stub.withArgs(`${config.API_BASE_URL}/users/1000`)
-      .yields(null, { statusCode: 404 });
+      .yields(null, {
+        statusCode: 404
+      });
 
     purgeQueues(done);
   });
@@ -148,16 +166,14 @@ describe('app', () => {
     it('should create `Project.Created` notification', (done) => {
       sendTestEvent(sampleEvents.draftCreated, 'project.draft-created', (notification) => {
         assert.deepEqual(notification, {
-          recipients: [
-            {
-              id: 8547899,
-              params: {
-                projectId: sampleEvents.draftCreated.id,
-                projectName: sampleEvents.draftCreated.name,
-                projectDescription: sampleEvents.draftCreated.description,
-              },
+          recipients: [{
+            id: 8547899,
+            params: {
+              projectId: sampleEvents.draftCreated.id,
+              projectName: sampleEvents.draftCreated.name,
+              projectDescription: sampleEvents.draftCreated.description,
             },
-          ],
+          }, ],
           notificationType: constants.notifications.project.created.notificationType,
           subject: constants.notifications.project.created.subject,
         });
@@ -187,19 +203,32 @@ describe('app', () => {
 
         if (notificationCount === 1) {
           assert.deepEqual(notification, {
-            recipients: [
-              { id: 8547899, params: expectedParams },
-              { id: 8547900, params: expectedParams },
+            recipients: [{
+                id: 8547899,
+                params: expectedParams
+              },
+              {
+                id: 8547900,
+                params: expectedParams
+              },
             ],
             notificationType: constants.notifications.project.submittedForReview.notificationType,
             subject: constants.notifications.project.submittedForReview.subject,
           });
         } else if (notificationCount === 2) {
           assert.deepEqual(notification, {
-            recipients: [
-              { id: 11111111, params: expectedParams },
-              { id: 22222222, params: expectedParams },
-              { id: 33333333, params: expectedParams },
+            recipients: [{
+                id: 11111111,
+                params: expectedParams
+              },
+              {
+                id: 22222222,
+                params: expectedParams
+              },
+              {
+                id: 33333333,
+                params: expectedParams
+              },
             ],
             notificationType: constants.notifications.project.availableForReview.notificationType,
             subject: constants.notifications.project.availableForReview.subject,
@@ -224,20 +253,36 @@ describe('app', () => {
 
         if (notificationCount === 1) {
           assert.deepEqual(notification, {
-            recipients: [
-              { id: 40152856, params: expectedParams },
-              { id: 8547899, params: expectedParams },
-              { id: 8547900, params: expectedParams },
-              { id: 123456, params: expectedParams },
+            recipients: [{
+                id: 40152856,
+                params: expectedParams
+              },
+              {
+                id: 8547899,
+                params: expectedParams
+              },
+              {
+                id: 8547900,
+                params: expectedParams
+              },
+              {
+                id: 123456,
+                params: expectedParams
+              },
             ],
             notificationType: constants.notifications.project.reviewed.notificationType,
             subject: constants.notifications.project.reviewed.subject,
           });
         } else if (notificationCount === 2) {
           assert.deepEqual(notification, {
-            recipients: [
-              { id: 11111111, params: expectedParams },
-              { id: 33333333, params: expectedParams },
+            recipients: [{
+                id: 11111111,
+                params: expectedParams
+              },
+              {
+                id: 33333333,
+                params: expectedParams
+              },
             ],
             notificationType: constants.notifications.project.availableToClaim.notificationType,
             subject: constants.notifications.project.availableToClaim.subject,
@@ -258,11 +303,22 @@ describe('app', () => {
       };
       sendTestEvent(sampleEvents.updatedReviewedCopilotAssigned, 'project.updated', (notification) => {
         assert.deepEqual(notification, {
-          recipients: [
-            { id: 40152856, params: expectedParams },
-            { id: 8547899, params: expectedParams },
-            { id: 8547900, params: expectedParams },
-            { id: 123456, params: expectedParams },
+          recipients: [{
+              id: 40152856,
+              params: expectedParams
+            },
+            {
+              id: 8547899,
+              params: expectedParams
+            },
+            {
+              id: 8547900,
+              params: expectedParams
+            },
+            {
+              id: 123456,
+              params: expectedParams
+            },
           ],
           notificationType: constants.notifications.project.reviewed.notificationType,
           subject: constants.notifications.project.reviewed.subject,
@@ -298,11 +354,22 @@ describe('app', () => {
       };
       sendTestEvent(sampleEvents.memberAddedTeamMember, 'project.member.added', (notification) => {
         assert.deepEqual(notification, {
-          recipients: [
-            { id: 1, params: expectedParams },
-            { id: 2, params: expectedParams },
-            { id: 3, params: expectedParams },
-            { id: 4, params: expectedParams },
+          recipients: [{
+              id: 1,
+              params: expectedParams
+            },
+            {
+              id: 2,
+              params: expectedParams
+            },
+            {
+              id: 3,
+              params: expectedParams
+            },
+            {
+              id: 4,
+              params: expectedParams
+            },
           ],
           notificationType: constants.notifications.teamMember.added.notificationType,
           subject: constants.notifications.teamMember.added.subject,
@@ -322,11 +389,22 @@ describe('app', () => {
       };
       sendTestEvent(sampleEvents.memberAddedManager, 'project.member.added', (notification) => {
         assert.deepEqual(notification, {
-          recipients: [
-            { id: 1, params: expectedParams },
-            { id: 2, params: expectedParams },
-            { id: 3, params: expectedParams },
-            { id: 4, params: expectedParams },
+          recipients: [{
+              id: 1,
+              params: expectedParams
+            },
+            {
+              id: 2,
+              params: expectedParams
+            },
+            {
+              id: 3,
+              params: expectedParams
+            },
+            {
+              id: 4,
+              params: expectedParams
+            },
           ],
           notificationType: constants.notifications.teamMember.managerJoined.notificationType,
           subject: constants.notifications.teamMember.managerJoined.subject,
@@ -346,11 +424,22 @@ describe('app', () => {
       };
       sendTestEvent(sampleEvents.memberAddedCopilot, 'project.member.added', (notification) => {
         assert.deepEqual(notification, {
-          recipients: [
-            { id: 1, params: expectedParams },
-            { id: 2, params: expectedParams },
-            { id: 3, params: expectedParams },
-            { id: 4, params: expectedParams },
+          recipients: [{
+              id: 1,
+              params: expectedParams
+            },
+            {
+              id: 2,
+              params: expectedParams
+            },
+            {
+              id: 3,
+              params: expectedParams
+            },
+            {
+              id: 4,
+              params: expectedParams
+            },
           ],
           notificationType: constants.notifications.teamMember.copilotJoined.notificationType,
           subject: constants.notifications.teamMember.copilotJoined.subject,
@@ -372,11 +461,22 @@ describe('app', () => {
       };
       sendTestEvent(sampleEvents.memberRemovedLeft, 'project.member.removed', (notification) => {
         assert.deepEqual(notification, {
-          recipients: [
-            { id: 1, params: expectedParams },
-            { id: 2, params: expectedParams },
-            { id: 3, params: expectedParams },
-            { id: 4, params: expectedParams },
+          recipients: [{
+              id: 1,
+              params: expectedParams
+            },
+            {
+              id: 2,
+              params: expectedParams
+            },
+            {
+              id: 3,
+              params: expectedParams
+            },
+            {
+              id: 4,
+              params: expectedParams
+            },
           ],
           notificationType: constants.notifications.teamMember.left.notificationType,
           subject: constants.notifications.teamMember.left.subject,
@@ -396,11 +496,22 @@ describe('app', () => {
       };
       sendTestEvent(sampleEvents.memberRemovedRemoved, 'project.member.removed', (notification) => {
         assert.deepEqual(notification, {
-          recipients: [
-            { id: 1, params: expectedParams },
-            { id: 2, params: expectedParams },
-            { id: 3, params: expectedParams },
-            { id: 4, params: expectedParams },
+          recipients: [{
+              id: 1,
+              params: expectedParams
+            },
+            {
+              id: 2,
+              params: expectedParams
+            },
+            {
+              id: 3,
+              params: expectedParams
+            },
+            {
+              id: 4,
+              params: expectedParams
+            },
           ],
           notificationType: constants.notifications.teamMember.removed.notificationType,
           subject: constants.notifications.teamMember.removed.subject,
@@ -422,11 +533,22 @@ describe('app', () => {
       };
       sendTestEvent(sampleEvents.memberUpdated, 'project.member.updated', (notification) => {
         assert.deepEqual(notification, {
-          recipients: [
-            { id: 1, params: expectedParams },
-            { id: 2, params: expectedParams },
-            { id: 3, params: expectedParams },
-            { id: 4, params: expectedParams },
+          recipients: [{
+              id: 1,
+              params: expectedParams
+            },
+            {
+              id: 2,
+              params: expectedParams
+            },
+            {
+              id: 3,
+              params: expectedParams
+            },
+            {
+              id: 4,
+              params: expectedParams
+            },
           ],
           notificationType: constants.notifications.teamMember.ownerChanged.notificationType,
           subject: constants.notifications.teamMember.ownerChanged.subject,
