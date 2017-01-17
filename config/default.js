@@ -27,8 +27,8 @@ module.exports = {
   // Target RabbitMQ Exchange that receive delayed notifications
   TARGET_RABBIT_DELAYED_EXCHANGE_NAME: process.env.TARGET_RABBIT_DELAYED_EXCHANGE_NAME || 'delayed-notifications',
   TARGET_RABBIT_DELAYED_EXCHANGE_TYPE: process.env.TARGET_RABBIT_DELAYED_EXCHANGE_TYPE || 'x-delayed-message',
-  TARGET_RABBIT_DELAYED_INTERVAL: 10 * 1000,
-    // Number(process.env.TARGET_RABBIT_DELAYED_INTERVAL) || 12 * 3600 * 1000,
+  TARGET_RABBIT_DELAYED_INTERVAL:
+    Number(process.env.TARGET_RABBIT_DELAYED_INTERVAL) || 10 * 1000,
   PAYLOAD_USERNAME: process.env.PAYLOAD_USERNAME || 'webhookbot',
   PAYLOAD_ICON_URL: process.env.PAYLOAD_ICON_URL || 'https://emoji.slack-edge.com/T03R80JP7/topcoder/7c68acd90a6b6d77.png',
   // Token is generated from https://logentries.com/

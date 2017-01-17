@@ -5,6 +5,8 @@
 /**
  * Tests for app.js
  */
+
+
 process.env.NODE_ENV = 'test';
 
 /* eslint-disable global-require, no-undef */

@@ -4,8 +4,8 @@ machine:
 
 dependencies:
   post:
-    - docker build -t 619910830190.dkr.ecr.us-west-2.amazonaws.com/topcoder_conncet .
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/topcoder_conncet:$CIRCLE_SHA1 .
 
 test:
   post:
-    - docker run -d --name topcoder_connect 619910830190.dkr.ecr.us-west-2.amazonaws.com/topcoder_conncet:$CIRCLE_SHA1
+    - docker run -d --name topcoder_connect $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/topcoder_conncet:$CIRCLE_SHA1; sleep 10
