@@ -1,9 +1,15 @@
 machine:
   node:
-    version: 6.1.0
+    version: 6.9.2
   services:
     - docker
-    - rabbitmq-server
+
+test:
+  override:
+    # unit-test needs rabbitmq with delayed-plugin enabled. Circleci do not support yet.
+    # please do local test instead.
+    - echo "test"
+
 
 dependencies:
   post:
