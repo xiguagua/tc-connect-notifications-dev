@@ -1,7 +1,13 @@
 machine:
+  services:
+    - docker
 
 dependencies:
+  post:
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/topcoder-connect:$CIRCLE_SHA1 .
 
-test:
-  override:
-    - npm test
+deployment:
+  prod:
+    branch: master
+    commands:
+      - ./deploy.sh

@@ -12,11 +12,11 @@
 module.exports = {
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
   // Source RabbitMQ that provides events to tc-connect-notifications
-  SOURCE_RABBIT_URL: process.env.SOURCE_RABBIT_URL || 'amqp://',
+  SOURCE_RABBIT_URL: process.env.SOURCE_RABBIT_URL || 'amqp://ssyxgyjw:uGDwEsY6R1NReYT5K3seAJnitHeYdVjB@hyena.rmq.cloudamqp.com/ssyxgyjw',
   SOURCE_RABBIT_EXCHANGE_NAME: process.env.SOURCE_RABBIT_EXCHANGE_NAME || 'projects',
   SOURCE_RABBIT_QUEUE_NAME: process.env.SOURCE_RABBIT_QUEUE_NAME || 'events-queue',
   // Target RabbitMQ that receive notifications from tc-connect-notifications
-  TARGET_RABBIT_URL: process.env.TARGET_RABBIT_URL || 'amqp://',
+  TARGET_RABBIT_URL: process.env.TARGET_RABBIT_URL || 'amqp://ssyxgyjw:uGDwEsY6R1NReYT5K3seAJnitHeYdVjB@hyena.rmq.cloudamqp.com/ssyxgyjw',
   TARGET_RABBIT_EXCHANGE_NAME: process.env.TARGET_RABBIT_EXCHANGE_NAME || 'notifications',
   TARGET_RABBIT_ROUTING_KEY: process.env.TARGET_RABBIT_ROUTING_KEY || 'notification',
   TARGET_RABBIT_QUEUE_NAME: process.env.TARGET_RABBIT_QUEUE_NAME || 'notifications-queue',
