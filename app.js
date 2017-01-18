@@ -7,6 +7,9 @@
  * @author TCSCODER
  * @version 1.0
  */
+
+'usr strict';
+
 const config = require('config');
 const _ = require('lodash');
 const co = require('co');
