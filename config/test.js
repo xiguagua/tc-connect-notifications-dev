@@ -10,10 +10,10 @@
 
 
 module.exports = {
-  SOURCE_RABBIT_URL: 'amqp://',
+  SOURCE_RABBIT_URL: 'amqp://localhost:5672',
   SOURCE_RABBIT_EXCHANGE_NAME: 'projects',
   SOURCE_RABBIT_QUEUE_NAME: 'events-queue',
-  TARGET_RABBIT_URL: 'amqp://',
+  TARGET_RABBIT_URL: 'amqp://localhost:5672',
   TARGET_RABBIT_EXCHANGE_NAME: 'notifications',
   TARGET_RABBIT_ROUTING_KEY: 'email',
   TARGET_RABBIT_QUEUE_NAME: 'notifications-queue',
